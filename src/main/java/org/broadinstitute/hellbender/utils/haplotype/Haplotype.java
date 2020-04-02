@@ -186,12 +186,13 @@ public final class Haplotype extends Allele {
     /**
      * Set the cigar of this haplotype to cigar.
      *
-     * Note that this function consolidates the cigar, so that 1M1M1I1M1M => 2M1I2M
+     * This method consolidates the cigar, so that 1M1M1I1M1M => 2M1I2M.  It does not remove leading or trailing deletions
+     * because haplotypes, unlike reads, are pegged to a specific reference start and end.
      *
      * @param cigar a cigar whose readLength == length()
      */
     public void setCigar( final Cigar cigar ) {
-        this.cigar = new CigarBuilder().addAll(cigar).make();
+        this.cigar = new CigarBuilder(false).addAll(cigar).make();
         Utils.validateArg( this.cigar.getReadLength() == length(), () -> "Read length " + length() + " not equal to the read length of the cigar " + cigar.getReadLength() + " " + this.cigar);
     }
 
